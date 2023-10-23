@@ -14,16 +14,33 @@ $select->execute();
 
 $row = $select->fetch(PDO::FETCH_ASSOC);
 
-if($row['useremail']==$useremail AND $row['userpassword']==$password){
+if(is_array($row)){
 
-echo $success="Login Success";
-header('refresh: 1;ui/dashboard.php');
+  if($row['useremail']==$useremail and $row['userpassword']==$password and $row['role'] == "Admin"){
+
+    echo $success="Login Success By Admin";
+    header('refresh: 1;ui/dashboard.php');
+    
+    
+  }else if($row['useremail']==$useremail and $row['userpassword']==$password and $row['role'] == "User"){
+
+    echo $success="Login Success By User";
+    header('refresh: 1;ui/user.php');
+
+  }
+    
+    
+    
+
 
 }else{
+
   echo $success = "Wrong Email or Password";
 }
 
 }
+
+
 
 
 
