@@ -15,6 +15,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
+<<<<<<< HEAD
 
    <!-- DataTables -->
    <link rel="stylesheet" href="../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
@@ -24,6 +25,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <!-- SweetAlert2 -->
   <link rel="stylesheet" href="../plugins/sweetalert2/sweetalert2.min.css">
+=======
+   <!-- SweetAlert2 -->
+>>>>>>> a634244ec399d70a7b6c8e9b070fd66749c7d84e
    
 </head>
 <body class="hold-transition sidebar-mini">
@@ -281,6 +285,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </li>
 
           <li class="nav-item">
+<<<<<<< HEAD
             <a href="changepassword.php" class="nav-link">
               <i class="nav-icon fas fa-user-lock"></i>
               <p>
@@ -293,6 +298,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <li class="nav-item">
             <a href="logout.php" class="nav-link">
               <i class="nav-icon fas fa-sign-out-alt"></i>
+=======
+            <a href="logout.php" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+>>>>>>> a634244ec399d70a7b6c8e9b070fd66749c7d84e
               <p>
                 Logout
                  

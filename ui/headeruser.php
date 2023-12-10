@@ -227,7 +227,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </li>
 
           <li class="nav-item">
+<<<<<<< HEAD
             <a href="Logout.php" class="nav-link">
+=======
+            <a href="logout.php" class="nav-link">
+>>>>>>> a634244ec399d70a7b6c8e9b070fd66749c7d84e
               <i class="nav-icon fas fa-th"></i>
               <p>
                LogOut

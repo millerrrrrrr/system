@@ -3,6 +3,7 @@
 include_once 'connectdb.php';
 session_start();
 
+<<<<<<< HEAD
 if ($_SESSION['useremail'] == "") {
     header('location:../index.php');
 }
@@ -60,6 +61,101 @@ if (isset($_POST['btnupdate'])) {
     }
 }
 
+=======
+
+if($_SESSION['useremail']==""){
+
+  header('location:../index.php');
+
+}
+if($_SESSION['role']=="Admin"){
+
+  
+  include_once"header.php";
+
+
+}else{
+
+include_once"headeruser.php";
+
+}
+
+// 1 step) When user click on updatepassword button then we get out values from user into php variables
+
+
+if(isset($_POST['btnupdate'])){
+
+$oldpassword_txt=$_POST['txt_oldpassword'];
+$newpassword_txt=$_POST['txt_newpassword'];
+$rnewpassword_txt=$_POST['txt_rnewpassword'];
+
+//echo $oldpassword_txt."-".$newpassword_txt."-".$rnewpassword_txt;
+
+
+
+
+// 2 step) Using of select Query we will get our database records  according to useremail.
+
+
+$email = $_SESSION['useremail'];
+
+$select =$pdo->prepare("select * from tbl_user where useremail='$email'");
+
+$select->execute();
+$row=$select->fetch(PDO::FETCH_ASSOC);
+
+  $useremail_db=$row['useremail'];
+  $password_db=$row['userpassword'];
+
+
+
+// 3 step) We will compare the user inputs values to database values
+
+
+if($oldpassword_txt== $password_db){
+
+if($newpassword_txt== $rnewpassword_txt){
+  
+  // 4 step) If values will match then we will run update Query.
+
+$update=$pdo->prepare("update tbl_user set userpassword=:pass where useremail=:email");
+
+$update->bindParam(':pass',$rnewpassword_txt);
+$update->bindParam(':email', $email);
+
+
+if($update->execute()){
+
+  $_SESSION['status']="Password Updated Successfully";
+  $_SESSION['status_code']="Success";
+
+}else{
+
+  $_SESSION['status']="Password not Updated Successfully";
+  $_SESSION['status_code']="Error";
+
+}
+
+}else{
+
+  $_SESSION['status']="New Password does not match";
+  $_SESSION['status_code']="Error";
+
+}
+
+}else{
+
+  $_SESSION['status']="New Password does not match";
+  $_SESSION['status']="Error";
+
+}
+
+
+
+}
+
+
+>>>>>>> a634244ec399d70a7b6c8e9b070fd66749c7d84e
 
 
 ?>
@@ -116,7 +212,11 @@ if (isset($_POST['btnupdate'])) {
                   <div class="form-group row">
                     <label for="inputPassword3" class="col-sm-2 col-form-label">Confirm  Password</label>
                     <div class="col-sm-10">
+<<<<<<< HEAD
                       <input type="password" class="form-control" id="inputPassword3" placeholder="Confirm Password" name="txt_rnewpassword"  >
+=======
+                      <input type="password" class="form-control" id="inputPassword3" placeholder="Confirm Password" name="txt_rnewpassword" >
+>>>>>>> a634244ec399d70a7b6c8e9b070fd66749c7d84e
                     </div>
                   </div>
                   
@@ -148,6 +248,7 @@ include_once"footer.php";
 ?>
 
 <?php
+<<<<<<< HEAD
 if(isset($_SESSION['status']) && $_SESSION['status']!='') {
     ?>
     <script>
@@ -163,3 +264,28 @@ if(isset($_SESSION['status']) && $_SESSION['status']!='') {
 
 
  
+=======
+
+if(isset($_SESSION['status']) && $_SESSION['status']!='')
+
+{
+
+?>
+<script>
+
+      Swal.fire({
+        icon: '<?php echo $_SESSION['status_code']; ?>',
+        title: '<?php echo $_SESSION['status']; ?>'
+      });
+
+</script>
+
+<?php
+
+unset($_SESSION['status']);
+
+}
+ 
+?>
+
+>>>>>>> a634244ec399d70a7b6c8e9b070fd66749c7d84e

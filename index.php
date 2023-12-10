@@ -174,7 +174,10 @@ $_SESSION['role'] = $row['role'];
 <script src="plugins/toastr/toastr.min.js"></script>
   <!-- AdminLTE App -->
   <script src="dist/js/adminlte.min.js"></script>
+<<<<<<< HEAD
   
+=======
+>>>>>>> a634244ec399d70a7b6c8e9b070fd66749c7d84e
 
 
 
@@ -193,7 +196,11 @@ $(function() {
     toast: true,
     position: 'top',
     showConfirmButton: false,
+<<<<<<< HEAD
     timer: 3000
+=======
+    timer: 5000
+>>>>>>> a634244ec399d70a7b6c8e9b070fd66749c7d84e
   });
 
   Toast.fire({
