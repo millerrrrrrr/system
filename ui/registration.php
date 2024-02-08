@@ -27,7 +27,7 @@ if(isset($id)){
         $statusCode = 'success';
     }else{
         $statusMessage = "Account was not deleted.";
-        $statusCode = 'success';
+        $statusCode = 'error';
     }
 
     $_SESSION['status'] = $statusMessage;
@@ -38,30 +38,51 @@ if(isset($id)){
 
 if(isset($_POST['btn_save'])){
     $username = $_POST['name'];
+    $userage = $_POST['age'];
     $useremail = $_POST['email'];
+    $useraddress = $_POST['address'];
+    $usercontact = $_POST['contact'];
     $userpassword = $_POST['password'];
     $userrole = $_POST['select_option'];
 
-    if(isset($_POST['email'])){
+    if(isset($_POST['email']) && isset($_POST['password'])){
 
-        $select = $pdo -> prepare("select useremail from tbl_user where useremail='$useremail'");
+        $selectEmail = $pdo -> prepare("select useremail from tbl_user where useremail='$useremail'");
+        $selectPassword = $pdo -> prepare("select userpassword from tbl_user where userpassword='$userpassword'");
 
-        $select -> execute();
 
-        if($select->rowCount()>0){
-            $statusMessage = "Email already exist.";
+        $selectEmail -> execute();
+        $selectPassword -> execute();
+
+        
+
+        if($selectEmail->rowCount()>0){
+            $statusMessage = "Email already exists.";
             $statusCode = 'warning';
+        } elseif($selectPassword->rowCount()>0) {
+            $statusMessage = "Password already exists.";
+            $statusCode = 'warning';
+        }elseif($_POST['age'] <= 17){
+            $statusMessage = "Sorry, you must be 17 or older to register an account.";
+            $statusCode = 'warning';
+
+
+
+
         }else{
 
-            $insert = $pdo -> prepare("insert into tbl_user (username,useremail,userpassword,role) values(:name,:email,:password,:role)");
+            $insert = $pdo -> prepare("insert into tbl_user (username,userage,useremail,useraddress,usercontact,userpassword,role) values(:name,:age,:email,:address,:contact,:password,:role)");
 
             $insert->bindParam(':name',$username);
+            $insert->bindParam(':age',$userage);
             $insert->bindParam(':email',$useremail);
+            $insert->bindParam(':address',$useraddress);
+            $insert->bindParam(':contact',$usercontact);
             $insert->bindParam(':password',$userpassword);
             $insert->bindParam(':role',$userrole);
         
             if($insert->execute()){
-                $statusMessage = "User registered successfully.";
+                $statusMessage = "Registered successfully.";
                 $statusCode = 'success';
             }else{
                 $statusMessage = "There was a problem registering the user";
@@ -118,14 +139,30 @@ if(isset($_POST['btn_save'])){
                                     </div>
 
                                     <div class="form-group">
+                                        <label>Age</label>
+                                        <input type="number" class="form-control" placeholder="Enter Age" name="age" min="1" max="99" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
                                         <label>Email address</label>
-                                        <input type="email" class="form-control" placeholder="Enter email" name="email" required>
+                                        <input type="email" class="form-control" placeholder="Enter Email" name="email" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Address</label>
+                                        <input type="text" class="form-control" placeholder="Enter Address" name="address" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Contact No.</label>
+                                        <input type="number" class="form-control" placeholder="Enter Contact No." name="contact" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label>Password</label>
                                         <input type="password" class="form-control" placeholder="Password" name="password" required>
                                     </div>
+                                    
 
                                     <div class="form-group">
                                         <label>Role</label>
@@ -150,7 +187,10 @@ if(isset($_POST['btn_save'])){
                                     <tr>
                                         <td>#</td>
                                         <td>Name</td>
+                                        <td>Age</td>
                                         <td>Email</td>
+                                        <td>Address</td>
+                                        <td>Contact No.</td>
                                         <td>Password</td>
                                         <td>Role</td>
                                         <td>Delete</td>
@@ -166,11 +206,14 @@ if(isset($_POST['btn_save'])){
                                         <tr>
                                         <td>'.$row->userid.'</td>
                                         <td>'.$row->username.'</td>
+                                        <td>'.$row->userage.'</td>
                                         <td>'.$row->useremail.'</td>
+                                        <td>'.$row->useraddress.'</td>
+                                        <td>'.$row->usercontact.'</td>
                                         <td>'.$row->userpassword.'</td>
                                         <td>'.$row->role.'</td>
                                         <td>
-                                        <a href="registration.php?id='.$row->userid.'" class="btn btn-danger"><i class="fa fa-trash-alt"></i></a>
+                                        <a href="#" class="btn btn-danger" onclick="confirmDelete(' . $row->userid . ');"><i class="fa fa-trash-alt"></i></a>
                                         </td>
                                         </tr>
                                         ';
@@ -215,5 +258,24 @@ HTML;
   unset($_SESSION['status']);
 }
 ?>
+
+<script>
+    function confirmDelete(userId) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'registration.php?id=' + userId;
+            }
+        });
+    }
+</script>
+
 
 

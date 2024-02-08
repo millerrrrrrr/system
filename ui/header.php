@@ -7,7 +7,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>POS | BARCODE SYSTEMS</title>
+  <title>AdminLTE 3 | Starter</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -15,20 +15,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
-<<<<<<< HEAD
-
-   <!-- DataTables -->
-   <link rel="stylesheet" href="../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-  <link rel="stylesheet" href="../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-
 
   <!-- SweetAlert2 -->
   <link rel="stylesheet" href="../plugins/sweetalert2/sweetalert2.min.css">
-=======
-   <!-- SweetAlert2 -->
->>>>>>> a634244ec399d70a7b6c8e9b070fd66749c7d84e
-   
+
+  <style>
+    .main-header{
+      background-color: #0C2D57;
+      
+    }
+    .main-sidebar{
+      background-color: #000000;
+      
+    }
+    .content-wrapper{
+      background-color: #EEF5FF;
+    }
+    
+    
+  </style>
+
+
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -39,12 +46,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <!-- <a href="index3.html" class="nav-link">Home</a> -->
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <!-- <a href="#" class="nav-link">Contact</a> -->
       </li>
     </ul>
 
@@ -176,7 +177,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
       <img src="../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">POS BARCODE</span>
+      <span class="brand-text font-weight-light">AdminLTE 3</span>
     </a>
 
     <!-- Sidebar -->
@@ -210,21 +211,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
                with font-awesome or any other icon font library -->
           
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="dashboard.php" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
-                
+               
               </p>
             </a>
           </li>
-
           <li class="nav-item">
-            <a href="category.php" class="nav-link">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
               <p>
-                Category  
-                
+                Category
+               
               </p>
             </a>
           </li>
@@ -232,8 +232,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
               <p>
-                Product  
-                
+                Product
+               
               </p>
             </a>
           </li>
@@ -241,8 +241,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
-                POS  
-                
+                POS
+               
               </p>
             </a>
           </li>
@@ -250,8 +250,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-list"></i>
               <p>
-                Orderlist  
-                
+                Order List
+               
               </p>
             </a>
           </li>
@@ -259,8 +259,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-chart-pie"></i>
               <p>
-                Sales Report  
-                
+                Sales Report
+               
               </p>
             </a>
           </li>
@@ -268,48 +268,38 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-calculator"></i>
               <p>
-                Tax  
-                
+                Tax
+               
               </p>
             </a>
           </li>
-
           <li class="nav-item">
             <a href="registration.php" class="nav-link">
               <i class="nav-icon fas fa-plus-square"></i>
               <p>
                 Registration
-                
+               
               </p>
             </a>
           </li>
-
           <li class="nav-item">
-<<<<<<< HEAD
             <a href="changepassword.php" class="nav-link">
-              <i class="nav-icon fas fa-user-lock"></i>
+              <i class="nav-icon fas fa-user-alt"></i>
               <p>
                 Change Password
-                
+               
               </p>
             </a>
           </li>
-
           <li class="nav-item">
             <a href="logout.php" class="nav-link">
               <i class="nav-icon fas fa-sign-out-alt"></i>
-=======
-            <a href="logout.php" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
->>>>>>> a634244ec399d70a7b6c8e9b070fd66749c7d84e
               <p>
                 Logout
-                 
+               
               </p>
             </a>
           </li>
-
-
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

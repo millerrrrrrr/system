@@ -2,22 +2,16 @@
 
 try{
 
-    $pdo = new PDO('mysql:host=localhost;dbname=pos_miller_db','root','');
+    $pdo = new PDO('mysql:host=localhost;dbname=pos_mil_db','root','');
 
-}catch(PDOException $e  ){
 
-echo $e->getMessage();
+}catch(PDOException $e ){
 
+   echo $e->getMessage();
 
 }
 
-
-
-
-
-//echo'connection success';
-
-
+// echo 'connected';
 
 
 ?>

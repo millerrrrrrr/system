@@ -1,22 +1,17 @@
 <?php
 
-include_once'connectdb.php';
+include_once 'connectdb.php';
 session_start();
 
-if($_SESSION['useremail']==""){
+if($_SESSION['useremail'] == ""){
 
-header('location:../index.php');
+  header('location:../index.php');
 
 }
 
-
-
-
-include_once"header.php";
+include_once "header.php";
 
 ?>
-
-
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -25,14 +20,9 @@ include_once"header.php";
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Admin Dashboard</h1>
+            <h1 class="m-0">Starter Page</h1>
           </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Starter Page</li> -->
-            </ol>
-          </div><!-- /.col -->
+         
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
@@ -42,16 +32,21 @@ include_once"header.php";
     <div class="content">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-lg-12">
-            
-
-            
-            
-          </div>
-          <!-- /.col-md-6 -->
           
+          <!-- /.col-md-6 -->
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="m-0">Featured</h5>
+              </div>
+              <div class="card-body">
+                <h6 class="card-title">Special title treatment</h6>
 
-            
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+
             
           </div>
           <!-- /.col-md-6 -->
@@ -63,9 +58,10 @@ include_once"header.php";
   </div>
   <!-- /.content-wrapper -->
 
- 
-  <?php
+
+
+<?php
 
 include_once"footer.php";
 
-?>  
+?>
