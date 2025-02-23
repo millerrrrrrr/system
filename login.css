@@ -1,0 +1,68 @@
+*{
+    margin: 0;
+    padding:0 ;
+    box-sizing: border-box;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* background-color: #f4f4f4; */
+    background-color: maroon;
+    
+
+}
+.container{
+    display: flex;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0,1);
+    overflow: hidden;
+    width: 700px;
+    /* border: 1px solid black; */
+    
+}
+.image{
+    width: 50%;
+    /* background: url('cats.jpg') no-repeat center cover/center; */
+    background: url('sanhs.jpg') no-repeat center center;
+    background-size: contain;
+    
+  
+    
+}
+.login-form{
+    width: 50%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+
+    h2{
+        margin-bottom: 20px;
+        text-align: center;
+        
+    }
+    input{
+        margin-bottom: 15px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    button{
+        padding: 10px;
+        background-color: maroon;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+
+    }
+    button:hover{
+        background-color: rgb(97, 3, 3);
+    }
+
+}
+.center-line{
+    border: 1px solid black;
+}
