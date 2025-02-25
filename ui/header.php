@@ -108,14 +108,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </a>
             </li>
             <li class="nav-item">
-              <a href="registeroption.php" class="nav-link">
+              <a href="register.php" class="nav-link">
                 <i class="nav-icon fas fa-plus-square"></i>
                 <p>
                   Registration
 
                 </p>
               </a>
-              </l i>
+              </li>
+            <li class="nav-item">
+              <a href="students.php" class="nav-link">
+                <i class="nav-icon fas fa-address-book"></i>
+                <p>
+                  Students
+
+                </p>
+              </a>
+              </li>
               <l class="nav-item">
                 <a href="logout.php" class="nav-link">
                   <i class="nav-icon fas fa-sign-out-alt"></i>

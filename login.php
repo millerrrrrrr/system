@@ -18,10 +18,7 @@ if (isset($_POST['btn_login'])) {
 
     if ($row['username'] == $username && $row['password'] == $password) {
 
-
       $_SESSION['username'] = $row['username'];
-
-
       $_SESSION['status'] = "Login Success by Admin";
       $_SESSION['status_code'] = "success";
       header('refresh: 1; ui/dashboard.php');
@@ -34,8 +31,6 @@ if (isset($_POST['btn_login'])) {
 }
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,55 +39,39 @@ if (isset($_POST['btn_login'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR-Based Attendance</title>
   <link rel="stylesheet" href="login.css">
-
-
-  <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-
-  <!-- jQuery -->
   <script src="plugins/jquery/jquery.min.js"></script>
-
-  <!-- SweetAlert2 -->
   <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
-  <!-- Toastr -->
   <link rel="stylesheet" href="plugins/toastr/toastr.min.css">
-
-
-
-
 </head>
 
 <body>
   <div class="container">
+    <div class="logo">
+      <img src="sanhs.jpg" alt="Logo"> <!-- Logo at top left -->
+    </div>
     <form class="login-form" action="" method="post">
-      <h2>Admin Sign in</h2>
+      <div class="form-header">
+        <h2>Admin Sign in</h2>
+      </div>
       <input type="text" placeholder="Username" name="username">
       <input type="password" placeholder="Password" name="password">
       <button name="btn_login">Login</button>
+
+      <br>
+      <!-- Change the <a> tag into a <button> -->
+      <button type="button" onclick="window.location.href='studentlogin.php'">Log in as a Student</button>
     </form>
-    <div class="center-line"></div>
-    <div class="image">
-
-    </div>
-  </div>
 
 
 
-  <!-- SweetAlert2 -->
-  <script src="plugins/sweetalert2/sweetalert2.min.js"></script>
-  <!-- Toastr -->
-  <script src="plugins/toastr/toastr.min.js"></script>
-
-
-
-
+    <script src="plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="plugins/toastr/toastr.min.js"></script>
 
 </body>
 
 </html>
-
 
 <?php
 if (isset($_SESSION['status']) && $_SESSION['status'] != '') {
@@ -107,7 +86,6 @@ if (isset($_SESSION['status']) && $_SESSION['status'] != '') {
         timer: 5000
       });
 
-
       Toast.fire({
         icon: '<?php echo $_SESSION['status_code'] ?>',
         title: '<?php echo $_SESSION['status'] ?>'
@@ -118,5 +96,4 @@ if (isset($_SESSION['status']) && $_SESSION['status'] != '') {
 <?php
   unset($_SESSION['status']);
 }
-
 ?>

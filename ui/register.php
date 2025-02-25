@@ -3,7 +3,88 @@ session_start();
 include_once "header.php";
 
 
+
+
+
+
+
+
+if (isset($_POST['btn_save'])) {
+    $name = $_POST['name'];
+    $lrn = $_POST['lrn'];
+    $password = $_POST['password'];
+    $grade = $_POST['select_grade'];
+    $section = $_POST['select_section'];
+    $gname = $_POST['guardian_name'];
+    $address = $_POST['address'];
+    $gcontact = $_POST['guardian_contact'];
+    $qr = $_POST['qr'];
+
+    if (isset($_POST['lrn']) && isset($_POST['password'])) {
+
+        $selectLrn = $pdo->prepare("select useremail from tbl_user where name'$name'");
+        $selectname = $pdo->prepare("select userpassword from tbl_user where lrn='$lrn'");
+
+
+        $selectEmail->execute();
+        $selectPassword->execute();
+
+
+
+        if ($selectEmail->rowCount() > 0) {
+            $statusMessage = "Email already exists.";
+            $statusCode = 'warning';
+        } elseif ($selectPassword->rowCount() > 0) {
+            $statusMessage = "Password already exists.";
+            $statusCode = 'warning';
+        } elseif ($_POST['age'] <= 17) {
+            $statusMessage = "Sorry, you must be 17 or older to register an account.";
+            $statusCode = 'warning';
+        } else {
+
+            $insert = $pdo->prepare("insert into tbl_user (username,userage,useremail,useraddress,usercontact,userpassword,role) values(:name,:age,:email,:address,:contact,:password,:role)");
+
+            $insert->bindParam(':name', $username);
+            $insert->bindParam(':age', $userage);
+            $insert->bindParam(':email', $useremail);
+            $insert->bindParam(':address', $useraddress);
+            $insert->bindParam(':contact', $usercontact);
+            $insert->bindParam(':password', $userpassword);
+            $insert->bindParam(':role', $userrole);
+
+            if ($insert->execute()) {
+                $statusMessage = "Registered successfully.";
+                $statusCode = 'success';
+            } else {
+                $statusMessage = "There was a problem registering the user";
+                $statusCode = 'error';
+            }
+        }
+        $_SESSION['status'] = $statusMessage;
+        $_SESSION['status_code'] = $statusCode;
+    }
+}
+
+
+
 ?>
+
+
+
+<style>
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+        /* For Firefox */
+    }
+</style>
+
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -28,13 +109,13 @@ include_once "header.php";
     <div class="content">
         <div class="container-fluid">
 
-            <div class="card card-primary card-outline">
+            <div class="card">
                 <div class="card-header">
                     <h5 class="m-0">Registration Form</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
 
                             <form action="" method="POST">
                                 <div class="card-body">
@@ -46,7 +127,12 @@ include_once "header.php";
 
                                     <div class="form-group">
                                         <label>Lrn</label>
-                                        <input type="number" class="form-control" placeholder="Enter Lrn" name="lrn">
+                                        <input type="number" class="form-control" id="lrn" placeholder="Enter Lrn" name="lrn">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input type="text" class="form-control" placeholder="Enter Password" name="password">
                                     </div>
 
                                     <!-- <div class="form-group">
@@ -97,13 +183,6 @@ include_once "header.php";
                                         <input type="number" class="form-control" placeholder="Enter Guardian's Contact No." name="guardian_contact">
                                     </div>
 
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        <input type="password" class="form-control" placeholder="Password" name="password" required>
-                                    </div>
-
-
-
                                 </div>
                                 <!-- /.card-body -->
 
@@ -113,47 +192,11 @@ include_once "header.php";
                             </form>
 
                         </div>
-                        <div class="col-md-8">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <td>#</td>
-                                        <td>Name</td>
-                                        <td>Age</td>
-                                        <td>Email</td>
-                                        <td>Address</td>
-                                        <td>Contact No.</td>
-                                        <td>Password</td>
-                                        <td>Role</td>
-                                        <td>Delete</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $select = $pdo->prepare('SELECT * from tbl_user ORDER BY userid ASC');
-                                    $select->execute();
-
-                                    while ($row = $select->fetch(PDO::FETCH_OBJ)) {
-                                        echo '
-                                        <tr>
-                                        <td>' . $row->userid . '</td>
-                                        <td>' . $row->username . '</td>
-                                        <td>' . $row->userage . '</td>
-                                        <td>' . $row->useremail . '</td>
-                                        <td>' . $row->useraddress . '</td>
-                                        <td>' . $row->usercontact . '</td>
-                                        <td>' . $row->userpassword . '</td>
-                                        <td>' . $row->role . '</td>
-                                        <td>
-                                        <a href="#" class="btn btn-danger" onclick="confirmDelete(' . $row->userid . ');"><i class="fa fa-trash-alt"></i></a>
-                                        </td>
-                                        </tr>
-                                        ';
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
+                        <div class="col-md-6">
+                            <label>Qr Code</label>
+                            <div id="qr-code" name="qr"></div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -177,8 +220,32 @@ include_once "header.php";
         sectionDropdown.innerHTML = '<option value="" disabled selected>Select Section</option>';
 
         // Based on grade, add the relevant options to the section dropdown
-        if (grade == '7' || grade == '8' || grade == '9' || grade == '10') {
-            var sections = ['A', 'B', 'C', 'D', 'E', 'F'];
+        if (grade == '7') {
+            var sections = ['Rose', 'Tulip', 'Lily', 'Daisy']; // 4 flowers for grade 7
+            sections.forEach(function(section) {
+                var option = document.createElement('option');
+                option.value = section;
+                option.textContent = section;
+                sectionDropdown.appendChild(option);
+            });
+        } else if (grade == '8') {
+            var sections = ['Ruby', 'Emerald', 'Sapphire', 'Diamond']; // 4 gems for grade 8
+            sections.forEach(function(section) {
+                var option = document.createElement('option');
+                option.value = section;
+                option.textContent = section;
+                sectionDropdown.appendChild(option);
+            });
+        } else if (grade == '9') {
+            var sections = ['Mercury', 'Venus', 'Earth', 'Mars']; // 4 planets for grade 9
+            sections.forEach(function(section) {
+                var option = document.createElement('option');
+                option.value = section;
+                option.textContent = section;
+                sectionDropdown.appendChild(option);
+            });
+        } else if (grade == '10') {
+            var sections = ['Einstein', 'Curie', 'Newton', 'Tesla']; // 4 scientists for grade 10
             sections.forEach(function(section) {
                 var option = document.createElement('option');
                 option.value = section;
@@ -186,12 +253,52 @@ include_once "header.php";
                 sectionDropdown.appendChild(option);
             });
         } else if (grade == '11' || grade == '12') {
-            var strands = ['STEM', 'ABM', 'HUMSS', 'GAS'];
-            strands.forEach(function(strand) {
+            var sections = ['Humss', 'Abm', 'Stem', 'Gas']; // Default 4 sections for grades 11 and 12
+            sections.forEach(function(section) {
                 var option = document.createElement('option');
-                option.value = strand;
-                option.textContent = strand;
+                option.value = section;
+                option.textContent = section;
                 sectionDropdown.appendChild(option);
+            });
+        }
+    });
+</script>
+
+<script>
+    document.getElementById('lrn').addEventListener('input', function() {
+        var lrn = this.value; // Get LRN from the input field
+
+        // Check if there's text in the input field
+        if (lrn) {
+            var qrImageUrl = "https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=" + encodeURIComponent(lrn);
+
+            // Display the QR code in the div
+            document.getElementById("qr-code").innerHTML = '<img src="' + qrImageUrl + '" alt="QR Code">';
+        } else {
+            // Clear QR code if LRN is empty
+            document.getElementById("qr-code").innerHTML = '';
+        }
+    });
+</script>
+
+<script>
+    document.getElementById('lrn').addEventListener('input', function() {
+        var lrn = this.value; // Get LRN from the input field
+        var sectionDropdown = document.getElementById("qr-code");
+
+        // Clear previous QR code
+        sectionDropdown.innerHTML = '';
+
+        // Check if there's text in the input field
+        if (lrn) {
+            // Generate QR code for the LRN
+            var qrCode = new QRCode(sectionDropdown, {
+                text: lrn, // The LRN value will be encoded into the QR code
+                width: 256, // QR Code width
+                height: 256, // QR Code height
+                colorDark: "#000000", // Dark color for QR code
+                colorLight: "#ffffff", // Light color (background)
+                correctLevel: QRCode.CorrectLevel.L // Error correction level
             });
         }
     });
