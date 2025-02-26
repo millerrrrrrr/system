@@ -1,6 +1,7 @@
 <?php
 session_start();
 include_once "header.php";
+include_once "connectdb.php";
 
 
 
@@ -20,37 +21,36 @@ if (isset($_POST['btn_save'])) {
     $gcontact = $_POST['guardian_contact'];
     $qr = $_POST['qr'];
 
-    if (isset($_POST['lrn']) && isset($_POST['password'])) {
+    if (isset($_POST['lrn']) && isset($_POST['name'])) {
 
-        $selectLrn = $pdo->prepare("select useremail from tbl_user where name'$name'");
-        $selectname = $pdo->prepare("select userpassword from tbl_user where lrn='$lrn'");
-
-
-        $selectEmail->execute();
-        $selectPassword->execute();
+        $selectLrn = $pdo->prepare("select lrn from tbl_students where lrn='$lrn'");
+        $selectName = $pdo->prepare("select name from tbl_students where name='$name'");
 
 
+        $selectLrn->execute();
+        $selectName->execute();
 
-        if ($selectEmail->rowCount() > 0) {
-            $statusMessage = "Email already exists.";
+
+
+        if ($selectLrn->rowCount() > 0) {
+            $statusMessage = "Lrn already exists.";
             $statusCode = 'warning';
-        } elseif ($selectPassword->rowCount() > 0) {
-            $statusMessage = "Password already exists.";
-            $statusCode = 'warning';
-        } elseif ($_POST['age'] <= 17) {
-            $statusMessage = "Sorry, you must be 17 or older to register an account.";
+        } elseif ($selectName->rowCount() > 0) {
+            $statusMessage = "Name already exists.";
             $statusCode = 'warning';
         } else {
 
-            $insert = $pdo->prepare("insert into tbl_user (username,userage,useremail,useraddress,usercontact,userpassword,role) values(:name,:age,:email,:address,:contact,:password,:role)");
+            $insert = $pdo->prepare("insert into tbl_students (name,lrn,password,grade,section,gname,address,gcontact,qr) values(:name,:lrn,:password,:grade,:section,:gname,:address,:gcontact,:qr)");
 
-            $insert->bindParam(':name', $username);
-            $insert->bindParam(':age', $userage);
-            $insert->bindParam(':email', $useremail);
-            $insert->bindParam(':address', $useraddress);
-            $insert->bindParam(':contact', $usercontact);
-            $insert->bindParam(':password', $userpassword);
-            $insert->bindParam(':role', $userrole);
+            $insert->bindParam(':name', $name);
+            $insert->bindParam(':lrn', $lrn);
+            $insert->bindParam(':password', $password);
+            $insert->bindParam(':grade', $grade);
+            $insert->bindParam(':section', $section);
+            $insert->bindParam(':gname', $gname);
+            $insert->bindParam(':address', $address);
+            $insert->bindParam(':gcontact', $gcontact);
+            $insert->bindParam(':qr', $qr);
 
             if ($insert->execute()) {
                 $statusMessage = "Registered successfully.";
