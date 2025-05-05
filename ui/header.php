@@ -125,6 +125,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </p>
               </a>
               </li>
+            <li class="nav-item">
+              <a href="scannertry.php" class="nav-link">
+                <i class="nav-icon fas fa-camera"></i>
+                <p>
+                  Scanner
+
+                </p>
+              </a>
+              </li>
               <l class="nav-item">
                 <a href="logout.php" class="nav-link">
                   <i class="nav-icon fas fa-sign-out-alt"></i>

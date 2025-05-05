@@ -3,14 +3,17 @@ session_start();
 include_once "header.php";
 include_once "connectdb.php";
 
+// Include the QR Code library
+include_once "phpqrcode/qrlib.php";  // Path to the PHP QR Code library
 
+// Directory to store QR codes
+define('QR_DIRECTORY', 'studentsqr/');
 
-
-
-
-
+// Initialize QR code filename variable
+$qrCodeFileName = ''; // Ensure it exists to avoid warning
 
 if (isset($_POST['btn_save'])) {
+    // Get the submitted form data
     $name = $_POST['name'];
     $lrn = $_POST['lrn'];
     $password = $_POST['password'];
@@ -19,28 +22,45 @@ if (isset($_POST['btn_save'])) {
     $gname = $_POST['guardian_name'];
     $address = $_POST['address'];
     $gcontact = $_POST['guardian_contact'];
-    $qr = $_POST['qr'];
 
-    if (isset($_POST['lrn']) && isset($_POST['name'])) {
+    // Prepare an associative array of the student details
+    $studentInfo = [
+        'name' => $name,
+        'lrn' => $lrn,
+        'password' => $password,
+        'grade' => $grade,
+        'section' => $section,
+        'guardian_name' => $gname,
+        'address' => $address,
+        'guardian_contact' => $gcontact
+    ];
 
-        $selectLrn = $pdo->prepare("select lrn from tbl_students where lrn='$lrn'");
-        $selectName = $pdo->prepare("select name from tbl_students where name='$name'");
+    // Encode the student details to JSON
+    $studentJson = json_encode($studentInfo);
 
+    // Generate QR Code based on JSON string, use LRN + timestamp for uniqueness
+    $qrCodeFileName = QR_DIRECTORY . $lrn . '_' . time() . '.png'; // Timestamp added for uniqueness
+    QRcode::png($studentJson, $qrCodeFileName);  // Generate QR code using the JSON data
 
-        $selectLrn->execute();
-        $selectName->execute();
+    if (isset($lrn) && isset($name)) {
+        // Check if LRN or Name already exists
+        $selectLrn = $pdo->prepare("SELECT lrn FROM tbl_student WHERE lrn = :lrn");
+        $selectName = $pdo->prepare("SELECT name FROM tbl_student WHERE name = :name");
 
-
+        $selectLrn->execute([':lrn' => $lrn]);
+        $selectName->execute([':name' => $name]);
 
         if ($selectLrn->rowCount() > 0) {
-            $statusMessage = "Lrn already exists.";
+            $statusMessage = "LRN already exists.";
             $statusCode = 'warning';
         } elseif ($selectName->rowCount() > 0) {
             $statusMessage = "Name already exists.";
             $statusCode = 'warning';
         } else {
-
-            $insert = $pdo->prepare("insert into tbl_students (name,lrn,password,grade,section,gname,address,gcontact,qr) values(:name,:lrn,:password,:grade,:section,:gname,:address,:gcontact,:qr)");
+            // Insert the student into the database, along with the QR code path
+            $insert = $pdo->prepare("INSERT INTO tbl_student 
+                (name, lrn, password, grade, section, gname, address, gcontact, image)
+                VALUES (:name, :lrn, :password, :grade, :section, :gname, :address, :gcontact, :image)");
 
             $insert->bindParam(':name', $name);
             $insert->bindParam(':lrn', $lrn);
@@ -50,7 +70,7 @@ if (isset($_POST['btn_save'])) {
             $insert->bindParam(':gname', $gname);
             $insert->bindParam(':address', $address);
             $insert->bindParam(':gcontact', $gcontact);
-            $insert->bindParam(':qr', $qr);
+            $insert->bindParam(':image', $qrCodeFileName);  // Store the QR code file path
 
             if ($insert->execute()) {
                 $statusMessage = "Registered successfully.";
@@ -64,12 +84,7 @@ if (isset($_POST['btn_save'])) {
         $_SESSION['status_code'] = $statusCode;
     }
 }
-
-
-
 ?>
-
-
 
 <style>
     input[type="number"]::-webkit-outer-spin-button,
@@ -79,12 +94,9 @@ if (isset($_POST['btn_save'])) {
     }
 
     input[type="number"] {
-        -moz-appearance: textfield;
-        /* For Firefox */
+        -moz-appearance: textfield; /* For Firefox */
     }
 </style>
-
-<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -96,8 +108,6 @@ if (isset($_POST['btn_save'])) {
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Starter Page</li> -->
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -108,7 +118,6 @@ if (isset($_POST['btn_save'])) {
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
-
             <div class="card">
                 <div class="card-header">
                     <h5 class="m-0">Registration Form</h5>
@@ -116,29 +125,22 @@ if (isset($_POST['btn_save'])) {
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-
                             <form action="" method="POST">
                                 <div class="card-body">
-
                                     <div class="form-group">
                                         <label>Name</label>
-                                        <input type="text" class="form-control" placeholder="Enter Name" name="name">
+                                        <input type="text" class="form-control" placeholder="Enter Name" name="name" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label>Lrn</label>
-                                        <input type="number" class="form-control" id="lrn" placeholder="Enter Lrn" name="lrn">
+                                        <input type="number" class="form-control" id="lrn" placeholder="Enter Lrn" name="lrn" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label>Password</label>
-                                        <input type="text" class="form-control" placeholder="Enter Password" name="password">
+                                        <input type="text" class="form-control" placeholder="Enter Password" name="password" required>
                                     </div>
-
-                                    <!-- <div class="form-group">
-                                        <label>Grade</label>
-                                        <input type="text" class="form-control" placeholder="Enter Grade" name="grade">
-                                    </div> -->
 
                                     <div class="form-group">
                                         <label>Grade</label>
@@ -160,68 +162,53 @@ if (isset($_POST['btn_save'])) {
                                         </select>
                                     </div>
 
-
-                                    <!-- <div class="form-group">
-                                        <label>Section/Strand</label>
-                                        <input type="text" class="form-control" placeholder="Enter Section/Strand" name="section">
-                                    </div> -->
-
                                     <div class="form-group">
                                         <label>Guardian's Name</label>
-                                        <input type="text" class="form-control" placeholder="Enter Guardian's Name" name="guardian_name">
+                                        <input type="text" class="form-control" placeholder="Enter Guardian's Name" name="guardian_name" required>
                                     </div>
-
-
 
                                     <div class="form-group">
                                         <label>Address</label>
-                                        <input type="text" class="form-control" placeholder="Enter Address" name="address">
+                                        <input type="text" class="form-control" placeholder="Enter Address" name="address" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label>Guardian's Contact No.</label>
-                                        <input type="number" class="form-control" placeholder="Enter Guardian's Contact No." name="guardian_contact">
+                                        <input type="number" class="form-control" placeholder="Enter Guardian's Contact No." name="guardian_contact" required>
                                     </div>
-
                                 </div>
-                                <!-- /.card-body -->
 
                                 <div class="card-footer">
                                     <button type="submit" class="btn btn-primary" name="btn_save">Save</button>
                                 </div>
                             </form>
-
                         </div>
+
                         <div class="col-md-6">
-                            <label>Qr Code</label>
-                            <div id="qr-code" name="qr"></div>
+                            <label>QR Code</label>
+                            <?php
+                            // Display the generated QR Code if it exists after form submission
+                            if (!empty($qrCodeFileName)) {
+                                echo '<img src="' . $qrCodeFileName . '" alt="QR Code">';
+                            }
+                            ?>
                         </div>
-
                     </div>
                 </div>
             </div>
-
-            <!-- /.row -->
-        </div><!-- /.container-fluid -->
+        </div>
     </div>
-    <!-- /.content -->
 </div>
-
-
-
-
 
 <script>
     document.getElementById('grade').addEventListener('change', function() {
         var grade = this.value;
         var sectionDropdown = document.getElementById('section');
 
-        // Clear previous options
         sectionDropdown.innerHTML = '<option value="" disabled selected>Select Section</option>';
 
-        // Based on grade, add the relevant options to the section dropdown
         if (grade == '7') {
-            var sections = ['Rose', 'Tulip', 'Lily', 'Daisy']; // 4 flowers for grade 7
+            var sections = ['Rose', 'Tulip', 'Lily', 'Daisy'];
             sections.forEach(function(section) {
                 var option = document.createElement('option');
                 option.value = section;
@@ -229,7 +216,7 @@ if (isset($_POST['btn_save'])) {
                 sectionDropdown.appendChild(option);
             });
         } else if (grade == '8') {
-            var sections = ['Ruby', 'Emerald', 'Sapphire', 'Diamond']; // 4 gems for grade 8
+            var sections = ['Ruby', 'Emerald', 'Sapphire', 'Diamond'];
             sections.forEach(function(section) {
                 var option = document.createElement('option');
                 option.value = section;
@@ -237,7 +224,7 @@ if (isset($_POST['btn_save'])) {
                 sectionDropdown.appendChild(option);
             });
         } else if (grade == '9') {
-            var sections = ['Mercury', 'Venus', 'Earth', 'Mars']; // 4 planets for grade 9
+            var sections = ['Mercury', 'Venus', 'Earth', 'Mars'];
             sections.forEach(function(section) {
                 var option = document.createElement('option');
                 option.value = section;
@@ -245,7 +232,7 @@ if (isset($_POST['btn_save'])) {
                 sectionDropdown.appendChild(option);
             });
         } else if (grade == '10') {
-            var sections = ['Einstein', 'Curie', 'Newton', 'Tesla']; // 4 scientists for grade 10
+            var sections = ['Einstein', 'Curie', 'Newton', 'Tesla'];
             sections.forEach(function(section) {
                 var option = document.createElement('option');
                 option.value = section;
@@ -253,7 +240,7 @@ if (isset($_POST['btn_save'])) {
                 sectionDropdown.appendChild(option);
             });
         } else if (grade == '11' || grade == '12') {
-            var sections = ['Humss', 'Abm', 'Stem', 'Gas']; // Default 4 sections for grades 11 and 12
+            var sections = ['Humss', 'Abm', 'Stem', 'Gas'];
             sections.forEach(function(section) {
                 var option = document.createElement('option');
                 option.value = section;
@@ -264,51 +251,4 @@ if (isset($_POST['btn_save'])) {
     });
 </script>
 
-<script>
-    document.getElementById('lrn').addEventListener('input', function() {
-        var lrn = this.value; // Get LRN from the input field
-
-        // Check if there's text in the input field
-        if (lrn) {
-            var qrImageUrl = "https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=" + encodeURIComponent(lrn);
-
-            // Display the QR code in the div
-            document.getElementById("qr-code").innerHTML = '<img src="' + qrImageUrl + '" alt="QR Code">';
-        } else {
-            // Clear QR code if LRN is empty
-            document.getElementById("qr-code").innerHTML = '';
-        }
-    });
-</script>
-
-<script>
-    document.getElementById('lrn').addEventListener('input', function() {
-        var lrn = this.value; // Get LRN from the input field
-        var sectionDropdown = document.getElementById("qr-code");
-
-        // Clear previous QR code
-        sectionDropdown.innerHTML = '';
-
-        // Check if there's text in the input field
-        if (lrn) {
-            // Generate QR code for the LRN
-            var qrCode = new QRCode(sectionDropdown, {
-                text: lrn, // The LRN value will be encoded into the QR code
-                width: 256, // QR Code width
-                height: 256, // QR Code height
-                colorDark: "#000000", // Dark color for QR code
-                colorLight: "#ffffff", // Light color (background)
-                correctLevel: QRCode.CorrectLevel.L // Error correction level
-            });
-        }
-    });
-</script>
-
-
-
-
-<?php
-
-include_once "footer.php";
-
-?>
+<?php include_once "footer.php"; ?>

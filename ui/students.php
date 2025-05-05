@@ -65,41 +65,54 @@ include_once "header.php";
                                 <tr>
                                     <td>#</td>
                                     <td>Name</td>
-                                    <td>Age</td>
-                                    <td>Email</td>
-                                    <td>Address</td>
-                                    <td>Contact No.</td>
+                                    <td>Lrn</td>
                                     <td>Password</td>
-                                    <td>Role</td>
-                                    <td>Delete</td>
+                                    <td>Grade</td>
+                                    <td>Section No.</td>
+                                    <td>Guardian's Name</td>
+                                    <td>Address</td>
+                                    <td>Guardian's Contact</td>
+                                    <td>QR</td>
+                                    <td>Actions</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                // Here you can filter students based on grade and section if needed.
-                                // For now, I am just listing all the students.
+                               
 
-                                // Example: 
-                                // $select = $pdo->prepare('SELECT * from tbl_user ORDER BY userid ASC');
-                                // $select->execute();
+                                $select = $pdo->prepare('SELECT * from tbl_student ORDER BY id ASC');
+                                $select->execute();
 
-                                // while ($row = $select->fetch(PDO::FETCH_OBJ)) {
-                                //     echo '
-                                //         <tr>
-                                //         <td>' . $row->userid . '</td>
-                                //         <td>' . $row->username . '</td>
-                                //         <td>' . $row->userage . '</td>
-                                //         <td>' . $row->useremail . '</td>
-                                //         <td>' . $row->useraddress . '</td>
-                                //         <td>' . $row->usercontact . '</td>
-                                //         <td>' . $row->userpassword . '</td>
-                                //         <td>' . $row->role . '</td>
-                                //         <td>
-                                //         <a href="#" class="btn btn-danger" onclick="confirmDelete(' . $row->userid . ');"><i class="fa fa-trash-alt"></i></a>
-                                //         </td>
-                                //         </tr>
-                                //     ';
-                                // }
+                                while ($row = $select->fetch(PDO::FETCH_OBJ)) {
+                                    echo '
+                                        <tr>
+                                        <td>' . $row->id . '</td>
+                                        <td>' . $row->name . '</td>
+                                        <td>' . $row->lrn . '</td>
+                                        <td>' . $row->password . '</td>
+                                        <td>' . $row->grade . '</td>
+                                        <td>' . $row->section . '</td>
+                                        <td>' . $row->gname . '</td>
+                                        <td>' . $row->address . '</td>
+                                        <td>' . $row->gcontact . '</td>
+                                        <td><image src="studentsqr/'.$row->image.'" class="img-rounded" width="40px" height="40px/"></td>
+                                        <td>
+                                          <div class="btn-group">
+                                         
+
+                                          <a href="viewstudent.php?id='.$row->id.'" class="btn btn-warning btn-xs" role="button"><span class="fa fa-eye" style="color:#ffffff" data-toggle="tooltip" title="View Product"></span></a>
+
+                                         
+
+                                          <button id='.$row->id.' class="btn btn-danger btn-xs btndelete" ><span class="fa fa-trash style="color:#ffffff" data-toggle="tooltip" title="Delete Product""></span></button>
+
+
+                                          </div>
+
+
+                                          </td>
+                                    ';
+                                }
                                 ?>
                             </tbody>
                         </table>

@@ -60,7 +60,7 @@ if (isset($_POST['btn_login'])) {
             <button name="btn_login">Login</button>
             <!-- Add the link below the button -->
             <br>
-            <button type="button" onclick="window.location.href='login.php'">Log in as a Admin</button>
+            <button type="button" onclick="window.location.href='index.php'">Log in as a Admin</button>
         </form>
 
 
