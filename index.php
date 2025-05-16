@@ -61,7 +61,7 @@ if (isset($_POST['btn_login'])) {
 
       <br>
       <!-- Change the <a> tag into a <button> -->
-      <button type="button" onclick="window.location.href='studentlogin.php'">Log in as a Student</button>
+      <!-- <button type="button" onclick="window.location.href='studentlogin.php'">Log in as a Student</button> -->
     </form>
 
 

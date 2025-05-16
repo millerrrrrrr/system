@@ -7,45 +7,51 @@ if ($_SESSION['username'] == "") {
 }
 
 include_once "header.php";
+
+// Handle filter input and clear
+if (isset($_POST['clear_filter'])) {
+    $selected_grade = '';
+    $selected_section = '';
+} else {
+    $selected_grade = isset($_POST['select_grade']) ? $_POST['select_grade'] : '';
+    $selected_section = isset($_POST['select_section']) ? $_POST['select_section'] : '';
+}
 ?>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1 class="m-0">Students</h1>
-                </div><!-- /.col -->
-
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /.content-header -->
 
-    <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
             <div class="row">
-                <!-- /.col-md-6 -->
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="m-0">Students</h5>
                         </div>
-                        <!-- Add the dropdowns for grade and section above the table -->
-                        <form method="POST" action="" class="form-inline">
+
+                        <!-- Filter Form -->
+                        <form method="POST" action="" class="form-inline p-3">
                             <div class="form-group mr-3">
                                 <label for="grade" class="mr-2">Grade</label>
                                 <select class="form-control" name="select_grade" id="grade" required>
                                     <option value="" disabled selected>Select Grade</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
+                                    <?php
+                                    $grades = ['7', '8', '9', '10', '11', '12'];
+                                    foreach ($grades as $grade) {
+                                        $selected = ($grade == $selected_grade) ? 'selected' : '';
+                                        echo "<option value=\"$grade\" $selected>$grade</option>";
+                                    }
+                                    ?>
                                 </select>
                             </div>
 
@@ -56,17 +62,19 @@ include_once "header.php";
                                 </select>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <button type="submit" class="btn btn-primary mr-2">Filter</button>
+                            <!-- Change this button to a normal button and use JS for redirect -->
+                            <button type="button" class="btn btn-secondary" id="resetButton">Reset</button>
                         </form>
 
-
+                        <!-- Student Table -->
                         <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <td>#</td>
                                     <td>Name</td>
                                     <td>Lrn</td>
-                                    <td>Password</td>
+                                    <!-- <td>Password</td> -->
                                     <td>Grade</td>
                                     <td>Section No.</td>
                                     <td>Guardian's Name</td>
@@ -78,77 +86,68 @@ include_once "header.php";
                             </thead>
                             <tbody>
                                 <?php
-                               
+                                // If filters are applied, use them in the query
+                                if ($selected_grade && $selected_section) {
+                                    $select = $pdo->prepare('SELECT * FROM tbl_student WHERE grade = :grade AND section = :section ORDER BY id ASC');
+                                    $select->bindParam(':grade', $selected_grade);
+                                    $select->bindParam(':section', $selected_section);
+                                } else {
+                                    // If no filters, show all students
+                                    $select = $pdo->prepare('SELECT * FROM tbl_student ORDER BY id ASC');
+                                }
 
-                                $select = $pdo->prepare('SELECT * from tbl_student ORDER BY id ASC');
                                 $select->execute();
 
                                 while ($row = $select->fetch(PDO::FETCH_OBJ)) {
                                     echo '
-                                        <tr>
+                                    <tr>
                                         <td>' . $row->id . '</td>
                                         <td>' . $row->name . '</td>
                                         <td>' . $row->lrn . '</td>
-                                        <td>' . $row->password . '</td>
+                                        
                                         <td>' . $row->grade . '</td>
                                         <td>' . $row->section . '</td>
                                         <td>' . $row->gname . '</td>
                                         <td>' . $row->address . '</td>
                                         <td>' . $row->gcontact . '</td>
-                                        <td><image src="studentsqr/'.$row->image.'" class="img-rounded" width="40px" height="40px/"></td>
+                                        <td><img src="' . $row->image . '" class="img-rounded" width="40px" height="40px"></td>
                                         <td>
-                                          <div class="btn-group">
-                                         
-
-                                          <a href="viewstudent.php?id='.$row->id.'" class="btn btn-warning btn-xs" role="button"><span class="fa fa-eye" style="color:#ffffff" data-toggle="tooltip" title="View Product"></span></a>
-
-                                         
-
-                                          <button id='.$row->id.' class="btn btn-danger btn-xs btndelete" ><span class="fa fa-trash style="color:#ffffff" data-toggle="tooltip" title="Delete Product""></span></button>
-
-
-                                          </div>
-
-
-                                          </td>
-                                    ';
+                                            <div class="btn-group">
+                                                <a href="viewstudent.php?id=' . $row->id . '" class="btn btn-warning btn-xs" role="button">
+                                                    <span class="fa fa-eye" style="color:#ffffff" data-toggle="tooltip" title="View Student"></span>
+                                                </a>
+                                                <button id="' . $row->id . '" class="btn btn-danger btn-xs btndelete">
+                                                    <span class="fa fa-trash" style="color:#ffffff" data-toggle="tooltip" title="Remove Student"></span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>';
                                 }
                                 ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <!-- /.col-md-6 -->
             </div>
-            <!-- /.row -->
-        </div><!-- /.container-fluid -->
+        </div>
     </div>
-    <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->
 
+<!-- Grade to Section Dropdown Script -->
 <script>
     document.getElementById('grade').addEventListener('change', function() {
-        var grade = this.value; // Get the selected grade
-        var sectionDropdown = document.getElementById('section'); // Get the section dropdown
-
-        // Clear previous options in the section dropdown
+        var grade = this.value;
+        var sectionDropdown = document.getElementById('section');
         sectionDropdown.innerHTML = '<option value="" disabled selected>Select Section</option>';
 
-        // Based on grade, add the relevant options to the section dropdown
-        if (grade == '7') {
-            var sections = ['Rose', 'Tulip', 'Lily', 'Daisy']; // 4 flowers for grade 7
-        } else if (grade == '8') {
-            var sections = ['Ruby', 'Emerald', 'Sapphire', 'Diamond']; // 4 gems for grade 8
-        } else if (grade == '9') {
-            var sections = ['Mercury', 'Venus', 'Earth', 'Mars']; // 4 planets for grade 9
-        } else if (grade == '10') {
-            var sections = ['Einstein', 'Curie', 'Newton', 'Tesla']; // 4 scientists for grade 10
-        } else if (grade == '11' || grade == '12') {
-            var sections = ['Humss', 'Abm', 'Stem', 'Gas']; // Default 4 sections for grades 11 and 12
-        }
+        var sections = [];
 
-        // Create and append options for the section dropdown
+        if (grade === '7') sections = ['Rose', 'Tulip', 'Lily', 'Daisy'];
+        else if (grade === '8') sections = ['Ruby', 'Emerald', 'Sapphire', 'Diamond'];
+        else if (grade === '9') sections = ['Mercury', 'Venus', 'Earth', 'Mars'];
+        else if (grade === '10') sections = ['Einstein', 'Curie', 'Newton', 'Tesla'];
+        else if (grade === '11' || grade === '12') sections = ['Humss', 'Abm', 'Stem', 'Gas'];
+
         sections.forEach(function(section) {
             var option = document.createElement('option');
             option.value = section;
@@ -156,8 +155,61 @@ include_once "header.php";
             sectionDropdown.appendChild(option);
         });
     });
+
+    // Redirect to students.php when the Reset button is clicked
+    document.getElementById('resetButton').addEventListener('click', function() {
+        window.location.href = 'students.php'; // Redirect to the students page
+    });
+
+    // Re-select section after reload (after applying the grade filter)
+    window.addEventListener('DOMContentLoaded', function() {
+        var selectedGrade = "<?php echo $selected_grade; ?>";
+        var selectedSection = "<?php echo $selected_section; ?>";
+
+        if (selectedGrade !== "") {
+            document.getElementById('grade').value = selectedGrade;
+            var event = new Event('change');
+            document.getElementById('grade').dispatchEvent(event);
+
+            setTimeout(function() {
+                document.getElementById('section').value = selectedSection;
+            }, 100);
+        }
+    });
 </script>
 
-<?php
-include_once "footer.php";
-?>
+<!-- Delete Script -->
+<script>
+    $(document).ready(function() {
+        $('.btndelete').click(function() {
+            var tdh = $(this);
+            var id = $(this).attr("id");
+
+            Swal.fire({
+                title: "Do you want to delete it?",
+                text: "You won’t be able to undo this action.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'studentdelete.php',
+                        type: 'post',
+                        data: {
+                            id: id
+                        },
+                        success: function(data) {
+                            tdh.parents('tr').hide();
+                            Swal.fire("Deleted!", "Student Deleted Successfully", "success");
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<?php include_once "footer.php"; ?>

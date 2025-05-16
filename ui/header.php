@@ -25,6 +25,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- SweetAlert2 -->
   <link rel="stylesheet" href="../plugins/sweetalert2/sweetalert2.min.css">
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
   <!-- Select2 -->
   <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
@@ -115,7 +117,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                 </p>
               </a>
-              </li>
+            </li>
             <li class="nav-item">
               <a href="students.php" class="nav-link">
                 <i class="nav-icon fas fa-address-book"></i>
@@ -124,7 +126,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                 </p>
               </a>
-              </li>
+            </li>
             <li class="nav-item">
               <a href="scannertry.php" class="nav-link">
                 <i class="nav-icon fas fa-camera"></i>
@@ -133,16 +135,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                 </p>
               </a>
-              </li>
-              <l class="nav-item">
-                <a href="logout.php" class="nav-link">
-                  <i class="nav-icon fas fa-sign-out-alt"></i>
-                  <p>
-                    Logout
-
-                  </p>
-                </a>
             </li>
+            <l class="nav-item">
+              <a href="logout.php" class="nav-link">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <p>
+                  Logout
+
+                </p>
+              </a>
+              </li>
           </ul>
         </nav>
         <!-- /.sidebar-menu -->
